@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Invitation : Le Village s'endort...</title>
+    <style>
+      /* --- DESIGN GLOBAL --- */
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #0b0c10; /* Noir profond */
+        background-image: radial-gradient(#1f2833 1px, transparent 1px);
+        background-size: 30px 30px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        color: white;
+        overflow: hidden;
+      }
+
+      @keyframes pulse {
+        0% {
+          opacity: 0.5;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0.5;
+        }
+      }
+
+      /* --- CONTENEUR DE LA CARTE --- */
+      .flip-card-container {
+        width: 320px; /* Taille optimisée mobile */
+        height: 452px; /* Ratio A5 */
+        perspective: 1500px;
+        cursor: pointer;
+      }
+
+      .flip-card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        transform-style: preserve-3d;
+      }
+
+      /* Classe activée par le clic */
+      .is-flipped {
+        transform: rotateY(180deg);
+      }
+
+      .flip-card-front,
+      .flip-card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        border-radius: 15px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .invitation-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      /* --- FACE VERSO --- */
+      .flip-card-back {
+        transform: rotateY(180deg);
+        background-color: #1a1a1a;
+      }
+
+      /* --- INDICATION --- */
+      .instruction {
+        margin-top: 25px;
+        font-size: 0.9rem;
+        color: #666;
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="flip-card-container" id="myCard">
+      <div class="flip-card-inner" id="cardInner">
+        <div class="flip-card-front">
+          <img
+            src="recto.png"
+            alt="Invitation Recto"
+            class="invitation-image"
+          />
+        </div>
+
+        <div class="flip-card-back">
+          <img
+            src="verso.png"
+            alt="Invitation Verso"
+            class="invitation-image"
+          />
+        </div>
+      </div>
+    </div>
+
+    <audio id="musique" src="audio.wav" loop></audio>
+
+    <script>
+      const card = document.getElementById("myCard");
+      const cardInner = document.getElementById("cardInner");
+      const musique = document.getElementById("musique");
+      let hasPlayed = false;
+
+      card.addEventListener("click", function () {
+        // Retourne la carte
+        cardInner.classList.toggle("is-flipped");
+
+        // Lance la musique au premier clic
+        if (!hasPlayed) {
+          // Fade in progressif du volume
+          musique.volume = 0;
+          musique
+            .play()
+            .catch((e) => console.log("Audio bloqué par le navigateur"));
+
+          let vol = 0;
+          const fadeIn = setInterval(() => {
+            if (vol < 0.4) {
+              vol += 0.05;
+              musique.volume = vol;
+            } else {
+              clearInterval(fadeIn);
+            }
+          }, 150);
+
+          hasPlayed = true;
+        }
+      });
+    </script>
+  </body>
+</html>
