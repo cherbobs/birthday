@@ -14,7 +14,7 @@
         justify-content: center;
         align-items: center;
         min-height: 100vh;
-        background-color: #0b0c10; /* Noir profond */
+        background-color: #0b0c10;
         background-image: radial-gradient(#1f2833 1px, transparent 1px);
         background-size: 30px 30px;
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -22,22 +22,10 @@
         overflow: hidden;
       }
 
-      @keyframes pulse {
-        0% {
-          opacity: 0.5;
-        }
-        50% {
-          opacity: 1;
-        }
-        100% {
-          opacity: 0.5;
-        }
-      }
-
       /* --- CONTENEUR DE LA CARTE --- */
       .flip-card-container {
-        width: 320px; /* Taille optimisée mobile */
-        height: 452px; /* Ratio A5 */
+        width: 320px;
+        height: 452px;
         perspective: 1500px;
         cursor: pointer;
       }
@@ -50,7 +38,6 @@
         transform-style: preserve-3d;
       }
 
-      /* Classe activée par le clic */
       .is-flipped {
         transform: rotateY(180deg);
       }
@@ -75,18 +62,36 @@
         display: block;
       }
 
-      /* --- FACE VERSO --- */
       .flip-card-back {
         transform: rotateY(180deg);
         background-color: #1a1a1a;
       }
 
-      /* --- INDICATION --- */
+      /* --- LA DIV CLIQUABLE (BOUTON) --- */
+      .zone-lien {
+        position: absolute;
+        /* --- AJUSTE CES 4 VALEURS POUR PLACER TON LIEN --- */
+        bottom: 10px; /* Distance depuis le haut */
+        left: 50%; /* Centré horizontalement */
+        width: 130px; /* Largeur de la zone cliquable */
+        height: 34px; /* Hauteur de la zone cliquable */
+        transform: translate(-50%, -50%);
+        /* ----------------------------------------------- */
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
+        color: white;
+        font-weight: bold;
+        z-index: 100;
+      }
+
       .instruction {
-        margin-top: 25px;
-        font-size: 0.9rem;
+        margin-top: 20px;
         color: #666;
-        font-style: italic;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
       }
     </style>
   </head>
@@ -107,6 +112,13 @@
             alt="Invitation Verso"
             class="invitation-image"
           />
+
+          <a
+            href="https://forms.gle/XF74WnD6WB8JwgfBA"
+            class="zone-lien"
+            id="btnInvite"
+          >
+          </a>
         </div>
       </div>
     </div>
@@ -117,7 +129,13 @@
       const card = document.getElementById("myCard");
       const cardInner = document.getElementById("cardInner");
       const musique = document.getElementById("musique");
+      const btnInvite = document.getElementById("btnInvite");
       let hasPlayed = false;
+
+      // EMPECHE LE RETOURNEMENT QUAND ON CLIQUE SUR LE LIEN
+      btnInvite.addEventListener("click", function (e) {
+        e.stopPropagation();
+      });
 
       card.addEventListener("click", function () {
         // Retourne la carte
@@ -125,11 +143,8 @@
 
         // Lance la musique au premier clic
         if (!hasPlayed) {
-          // Fade in progressif du volume
           musique.volume = 0;
-          musique
-            .play()
-            .catch((e) => console.log("Audio bloqué par le navigateur"));
+          musique.play().catch((e) => console.log("Audio bloqué"));
 
           let vol = 0;
           const fadeIn = setInterval(() => {
